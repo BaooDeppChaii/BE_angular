@@ -180,6 +180,29 @@ class OrderController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  static async myOrders(req, res) {
+  try {
+
+      console.log("TOKEN USER:", req.user);
+    const orders = await OrderModel.findAll({
+      where: { user_id: req.user.id }, // 👈 quan trọng
+      include: [
+        {
+          model: OrderDetailModel,
+        }
+      ]
+    });
+
+    res.status(200).json({
+      status: 200,
+      data: orders
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 }
 
 module.exports = OrderController;
